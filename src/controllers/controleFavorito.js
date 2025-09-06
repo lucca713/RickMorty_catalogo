@@ -1,4 +1,4 @@
-const { favoritos, user } = require("../model/modelo_usuario");
+const { favoritos } = require("../model/modelo_usuario");
 const ServiceRickAndMorty = require("../services/rickAndMorty");
 const { AppError } = require("../utils/errorHandler");
 
@@ -64,11 +64,44 @@ const listFavoritos = async (req, res, next) => {
 //atualizar um favotiro
 
 const AttFavorito = async (req, res, next) => {
-  const userId = req.user.id;
-  const { IdPersonagemAntigo } = req.params;
-  const { IdNovopersonagem } = req.body;
+  try {
+    const userId = req.user.id;
+    const { IdPersonagemAntigo } = req.params;
+    const { IdNovopersonagem } = req.body;
 
-  if(!IdNovopersonagem){
-    throw new AppError("precisa do novo id", 400)
+    if (!IdNovopersonagem) {
+      throw new AppError("precisa do novo id", 400);
+    }
+
+    const userFavorite = favoritos.get(userId) || [];
+    const IdAntigo = parseInt(IdPersonagemAntigo, 10);
+
+    const indexUpdate = userFavorite.indexOf(IdAntigo);
+
+    //-1 vai cair se nao estiver na lista
+    if (indexUpdate === -1) {
+      throw new AppError("nao esta na lista esse personagem para att.", 404);
+    }
+    if (userFavorite.includes(IdNovopersonagem)) {
+      throw new AppError("ele ja esta nos favoritos", 409);
+    }
+    await ServiceRickAndMorty.getCharacterById(IdNovopersonagem);
+
+    userFavorite[indexToUpdate] = IdNovopersonagem;
+    favoritos.set(userId, userFavorite);
+    res.status(200).json({ message: "Favorito ATT", favorites: userFavorite });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//remover favoritos
+const removerFavorito = (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { characterId } = req.params;
+    const idToRemove = parseInt(characterId, 10);
+  } catch (error) {
+    next(error);
   }
 };
