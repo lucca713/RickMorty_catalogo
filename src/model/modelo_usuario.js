@@ -3,7 +3,7 @@
 //usar arreys para simular banco de dados - > dps coloco um
 
 //usuarios
-const user = [];
+const users = [];
 
 //rastrear contagem de requisicao
 const requestConstagem = new Map();
@@ -12,7 +12,7 @@ const requestConstagem = new Map();
 const favoritos = new Map();
 
 module.exports = {
-  user,
+  users,
   requestConstagem,
   favoritos,
 };
