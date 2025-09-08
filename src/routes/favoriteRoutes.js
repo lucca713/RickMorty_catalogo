@@ -24,7 +24,11 @@ router.get("/", favoriteController.listFavoritos);
 //pegar o id do atual para trocar para o novo
 router.put("/:characterId", favoriteController.AttFavorito);
 router.delete("/:characterId", favoriteController.removeFavorite);
+
+//ep que os 2 aparecem
 router.get("/episodes/count", favoriteController.favoritoCadaEpisodio);
+
+//ep que os 2 aparecem juntos
 router.get("/episodes/unique-count", favoriteController.AparicaoUnicaTodos);
 
 module.exports = router;
