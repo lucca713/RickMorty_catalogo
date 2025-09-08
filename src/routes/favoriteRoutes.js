@@ -21,7 +21,8 @@ router.get("/external/character/:id", rateLimit, (req, res) => {
 
 router.post("/", favoriteController.addFavorite);
 router.get("/", favoriteController.listFavoritos);
-router.put("/:oldCharacterId", favoriteController.AttFavorito);
+//pegar o id do atual para trocar para o novo
+router.put("/:characterId", favoriteController.AttFavorito);
 router.delete("/:characterId", favoriteController.removeFavorite);
 router.get("/episodes/count", favoriteController.favoritoCadaEpisodio);
 router.get("/episodes/unique-count", favoriteController.AparicaoUnicaTodos);
