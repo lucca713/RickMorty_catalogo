@@ -95,13 +95,85 @@ const AttFavorito = async (req, res, next) => {
   }
 };
 
-//remover favoritos
-const removerFavorito = (req, res, next) => {
+// Remover um favorito
+const removeFavorite = (req, res, next) => {
   try {
     const userId = req.user.id;
     const { characterId } = req.params;
-    const idToRemove = parseInt(characterId, 10);
+    const idRemovido = parseInt(characterId, 10);
+
+    const userFavorites = favorites.get(userId) || [];
+    const updatedFavorito = userFavorites.filter((id) => id !== idRemovido);
+
+    if (userFavorites.length === updatedFavorito.length) {
+      throw new AppError("Ele nao foi achado nos favoritos", 404);
+    }
+
+    favorites.set(userId, updatedFavorito);
+    res.status(200).json({
+      message: "Removido com sucesso dos favoritos",
+      favorites: updatedFavorito,
+    });
   } catch (error) {
     next(error);
   }
+};
+
+// Saber quantos episódios cada personagem favorito aparece
+const favoritoCadaEpisodio = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const favoriteIds = favorites.get(userId) || [];
+
+    if (favoriteIds.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    const characters = await ServiceRickAndMorty.getMultipleCharacters(
+      favoriteIds
+    );
+ //pega do retorno da requisicao url para pegar todas as info dos personagens
+    const episodeCounts = characters.map((Personagem) => ({
+      characterId: Personagem.id,
+      name: Personagem.name,
+      episodeCount: Personagem.episode.length,
+    }));
+
+    res.status(200).json(episodeCounts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Saber quantos episódios todos os favoritos aparecem (contagem única)
+const AparicaoUnicaTodos = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const favoriteIds = favorites.get(userId) || [];
+
+    if (favoriteIds.length === 0) {
+      return res.status(200).json({ TotalEpUnicos: 0 });
+    }
+
+    const characters = await ServiceRickAndMorty.getMultipleCharacters(
+      favoriteIds
+    );
+
+    const TodosEpsUrl = characters.flatMap((Personagem) => Personagem.episode);
+    const UrlEpUnico = new Set(TodosEpsUrl);
+
+    res.status(200).json({ TotalEpUnicos: UrlEpUnico.size });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//exportando todos modulos?
+module.exports = {
+  addFavorite,
+  listFavoritos,
+  AttFavorito,
+  removeFavorite,
+  favoritoCadaEpisodio,
+  AparicaoUnicaTodos,
 };

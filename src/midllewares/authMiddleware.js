@@ -15,14 +15,15 @@ const protect = (req, res, next) => {
   }
 
   if (!token) {
-    return next(new AppError("facao o login no ceu acessos0", 401));
+    return next(new AppError("faca o login no ceu acessos", 401));
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     //add dados do usuario do token
     req.user = decoded;
   } catch (error) {
-    return next(new AppError("Invalid token.", 401));
+    return next(new AppError("token invalido.", 401));
   }
-  module.exports = { protect };
+
 };
+ module.exports = { protect };
