@@ -5,7 +5,9 @@ const { AppError } = require("../utils/errorHandler");
 //Adicionar ao favorito
 
 const addFavorite = async (req, res, next) => {
+   console.log("entrou no add");
   try {
+    console.log("entrou no try");
     //pegar da lista o id
     const userId = req.user.id;
     const { characterId } = req.body;
@@ -28,7 +30,8 @@ const addFavorite = async (req, res, next) => {
     }
 
     //validar se o id tem na api
-    await ServiceRickAndMorty.getAllCharacter(characterId);
+    await ServiceRickAndMorty.getCharacterById(characterId);
+    console.log("passou do await");
 
     userFavorite.push(characterId);
     favoritos.set(userId, userFavorite);
@@ -129,9 +132,7 @@ const favoritoCadaEpisodio = async (req, res, next) => {
       return res.status(200).json([]);
     }
 
-    const characters = await ServiceRickAndMorty.getMultipleCharacters(
-      favoriteIds
-    );
+    const characters = await ServiceRickAndMorty.getAllCharacter(favoriteIds);
     //pega do retorno da requisicao url para pegar todas as info dos personagens
     const episodeCounts = characters.map((Personagem) => ({
       characterId: Personagem.id,
@@ -155,9 +156,7 @@ const AparicaoUnicaTodos = async (req, res, next) => {
       return res.status(200).json({ TotalEpUnicos: 0 });
     }
 
-    const characters = await ServiceRickAndMorty.getMultipleCharacters(
-      favoriteIds
-    );
+    const characters = await ServiceRickAndMorty.getAllCharacter(favoriteIds);
 
     const TodosEpsUrl = characters.flatMap((Personagem) => Personagem.episode);
     const UrlEpUnico = new Set(TodosEpsUrl);

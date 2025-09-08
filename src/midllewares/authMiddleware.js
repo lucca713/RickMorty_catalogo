@@ -21,9 +21,11 @@ const protect = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     //add dados do usuario do token
     req.user = decoded;
+
+    //next para abrir a porta
+    next();
   } catch (error) {
     return next(new AppError("token invalido.", 401));
   }
-
 };
- module.exports = { protect };
+module.exports = { protect };
