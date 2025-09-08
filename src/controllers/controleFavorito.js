@@ -4,7 +4,7 @@ const { AppError } = require("../utils/errorHandler");
 
 //Adicionar ao favorito
 
-const addFavorite = async (requestAnimationFrame, resizeBy, next) => {
+const addFavorite = async (req, res, next) => {
   try {
     //pegar da lista o id
     const userId = req.user.id;
@@ -24,7 +24,7 @@ const addFavorite = async (requestAnimationFrame, resizeBy, next) => {
 
     //validar se ja foi colocado na lista de favoritos
     if (userFavorite.includes(characterId)) {
-      throw new AppError("Personagem ja na lista de favoritos", 400);
+      throw new AppError("Personagem ja na lista de favoritos", 409);
     }
 
     //validar se o id tem na api
@@ -35,7 +35,7 @@ const addFavorite = async (requestAnimationFrame, resizeBy, next) => {
 
     //retorna da requisicao
     res
-      .status(200)
+      .status(201)
       .json({ message: "adicionado aos favoritos", favoritos: userFavorite });
   } catch (error) {
     next(error);
@@ -55,7 +55,7 @@ const listFavoritos = async (req, res, next) => {
     const DadosDosFavoritos = await ServiceRickAndMorty.getAllCharacter(
       favoriteIds
     );
-    return res.status(200).json([]);
+    return res.status(200).json(DadosDosFavoritos);
   } catch (error) {
     next(error);
   }
@@ -132,7 +132,7 @@ const favoritoCadaEpisodio = async (req, res, next) => {
     const characters = await ServiceRickAndMorty.getMultipleCharacters(
       favoriteIds
     );
- //pega do retorno da requisicao url para pegar todas as info dos personagens
+    //pega do retorno da requisicao url para pegar todas as info dos personagens
     const episodeCounts = characters.map((Personagem) => ({
       characterId: Personagem.id,
       name: Personagem.name,

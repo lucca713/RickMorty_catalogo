@@ -6,7 +6,7 @@ const favoriteRoutes = require("./favoriteRoutes");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
-router.use("/favorites", favoriteRoutes);
+router.use("/favoritos", favoriteRoutes);
 
 // Rota de exemplo para consulta não autenticada com rate limit
 const { rateLimit } = require("../midllewares/Limite");

@@ -41,3 +41,4 @@ const rateLimit = (req, res, next) => {
   next();
 };
 module.exports = { rateLimit };
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJtZXVwcmltZWlyb3VzZXIiLCJpYXQiOjE3NTcyOTA3NzAsImV4cCI6MTc1NzI5NDM3MH0.O1r_-lGthUkFFXXBSd6nBCSr8t4LLUOBMYOYy5PYIsE
